@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Leadership Academy - Devotion Calendar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #86efac 0%, #22c55e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .verse-of-day {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .verse-image {
+            width: 100%;
+            max-width: 400px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .verse-text {
+            font-style: italic;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .verse-reference {
+            text-align: right;
+            font-weight: bold;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .month-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        .nav-btn {
+            background: #15803d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #166534;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(21, 128, 61, 0.3);
+        }
+
+        .current-month {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #15803d;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .day-header {
+            background: #15803d;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .day-cell {
+            background: white;
+            min-height: 100px;
+            padding: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .day-cell:hover {
+            background: #f0fdf4;
+        }
+
+        .day-number {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .devotion-day {
+            background: linear-gradient(135deg, #86efac, #22c55e) !important;
+            color: white;
+        }
+
+        .devotion-day:hover {
+            background: linear-gradient(135deg, #6ee7b7, #16a34a) !important;
+        }
+
+        .leader-name {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .devotion-type {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        .other-month {
+            opacity: 0.3;
+        }
+
+        .today {
+            border: 3px solid #eab308;
+            background: #fef3c7 !important;
+        }
+
+        .today.devotion-day {
+            border-color: #eab308;
+            background: linear-gradient(135deg, #86efac, #22c55e) !important;
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.5);
+        }
+
+        .team-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .team-member {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .member-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #15803d;
+            margin-bottom: 10px;
+        }
+
+        .next-duty {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .stats-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-radius: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #15803d;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .current-month {
+                font-size: 1.5rem;
+            }
+
+            .calendar-grid {
+                font-size: 0.9rem;
+            }
+
+            .day-cell {
+                min-height: 80px;
+                padding: 5px;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+
+            .verse-image {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Star Leadership Academy</h1>
+            <p>Devotion Calendar & Ministry Schedule</p>
+            
+            <div class="verse-of-day">
+                <img id="verseImage" class="verse-image" style="display: none;" alt="Daily inspiration">
+                <div class="verse-text" id="verseText">
+                    Loading today's verse...
+                </div>
+                <div class="verse-reference" id="verseReference">- Loading...</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="month-navigation">
+                <button class="nav-btn" onclick="changeMonth(-1)">← Previous</button>
+                <div class="current-month" id="currentMonth"></div>
+                <button class="nav-btn" onclick="changeMonth(1)">Next →</button>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #86efac, #22c55e);"></div>
+                    <span>Devotion Days</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #eab308;"></div>
+                    <span>Today</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: white; border: 1px solid #ddd;"></div>
+                    <span>Regular Days</span>
+                </div>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid"></div>
+
+            <div class="stats-section">
+                <h3 style="text-align: center; margin-bottom: 20px; color: #15803d;">Devotions Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="devotionsThisMonth">0</div>
+                        <div class="stat-label">Devotions This Month</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="activeLeaders">4</div>
+                        <div class="stat-label">Active Leaders</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="nextLeader">Loading...</div>
+                        <div class="stat-label">Next Week's Leader</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="weeklyServices">3</div>
+                        <div class="stat-label">Services Per Week</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-overview">
+                <div class="team-member">
+                    <div class="member-name">Wadzanayi Taputaira</div>
+                    <div class="next-duty" id="wadzanayiNext">Next duty: Loading...</div>
+                </div>
+                <div class="team-member">
+                    <div class="member-name">Pastor Munashe Zvarimwa</div>
+                    <div class="next-duty" id="munasheNext">Next duty: Loading...</div>
+                </div>
+                <div class="team-member">
+                    <div class="member-name">Loice Zengeni</div>
+                    <div class="next-duty" id="loiceNext">Next duty: Loading...</div>
+                </div>
+                <div class="team-member">
+                    <div class="member-name">Tawanda Mtsuko</div>
+                    <div class="next-duty" id="tawandaNext">Next duty: Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TEAM_MEMBERS = [
+            { name: "Wadzanayi", fullName: "Wadzanayi Taputaira", email: "wadzanayi@starleadershipacademy.org" },
+            { name: "Pastor Munashe", fullName: "Pastor Munashe Zvarimwa", email: "munashe@starleadershipacademy.org" },
+            { name: "Loice", fullName: "Loice Zengeni", email: "loice@starleadershipacademy.org" },
+            { name: "Tawanda", fullName: "Tawanda Mtsuko", email: "tawanda@starleadershipacademy.org" }
+        ];
+
+        let currentDate = new Date();
+        let versesData = [];
+
+        // Load verses from Google Apps Script backend
+        function loadVersesFromSheet() {
+            document.getElementById('verseText').textContent = 'Loading verses...';
+            
+            google.script.run
+                .withSuccessHandler(function(verses) {
+                    versesData = verses;
+                    console.log('Verses loaded:', versesData.length);
+                    updateVerseOfDay();
+                })
+                .withFailureHandler(function(error) {
+                    console.error('Error loading verses:', error);
+                    document.getElementById('verseText').textContent = '"Let the word of Christ dwell in you richly, teaching and admonishing one another in all wisdom, singing psalms and hymns and spiritual songs, with thankfulness in your hearts to God."';
+                    document.getElementById('verseReference').textContent = '- Colossians 3:16';
+                })
+                .getVersesFromSheet();
+        }
+
+        function getWeekOfYear(date) {
+            const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+            const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+            return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        }
+
+        function getLeaderForWeek(weekNum) {
+            const leaderIndex = (weekNum - 1) % TEAM_MEMBERS.length;
+            return TEAM_MEMBERS[leaderIndex];
+        }
+
+        function isDevotionDay(date) {
+            const day = date.getDay();
+            return day === 1 || day === 3 || day === 4; // Monday, Wednesday, Thursday
+        }
+
+        function getDevotionType(date) {
+            const day = date.getDay();
+            if (day === 1) return "Monday Devotion";
+            if (day === 3) return "Wednesday Devotion";
+            if (day === 4) return "Thursday Devotion";
+            return "";
+        }
+
+        function generateCalendar(year, month) {
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+
+            // Day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'day-header';
+                header.textContent = day;
+                calendarGrid.appendChild(header);
+            });
+
+            // Calendar days
+            let devotionCount = 0;
+            const currentWeekStart = new Date();
+            currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay() + 1);
+
+            for (let i = 0; i < 42; i++) {
+                const cellDate = new Date(startDate);
+                cellDate.setDate(startDate.getDate() + i);
+                
+                const cell = document.createElement('div');
+                cell.className = 'day-cell';
+                
+                if (cellDate.getMonth() !== month) {
+                    cell.classList.add('other-month');
+                }
+                
+                if (cellDate.toDateString() === new Date().toDateString()) {
+                    cell.classList.add('today');
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = cellDate.getDate();
+                cell.appendChild(dayNumber);
+                
+                if (isDevotionDay(cellDate) && cellDate.getMonth() === month) {
+                    cell.classList.add('devotion-day');
+                    devotionCount++;
+                    
+                    const weekNum = getWeekOfYear(cellDate);
+                    const leader = getLeaderForWeek(weekNum);
+                    
+                    const leaderName = document.createElement('div');
+                    leaderName.className = 'leader-name';
+                    leaderName.textContent = leader.name;
+                    cell.appendChild(leaderName);
+                    
+                    const devotionType = document.createElement('div');
+                    devotionType.className = 'devotion-type';
+                    devotionType.textContent = getDevotionType(cellDate);
+                    cell.appendChild(devotionType);
+                }
+                
+                calendarGrid.appendChild(cell);
+            }
+
+            document.getElementById('devotionsThisMonth').textContent = devotionCount;
+            
+            const nextWeekStart = new Date(currentWeekStart);
+            nextWeekStart.setDate(nextWeekStart.getDate() + 7);
+            const nextWeekNum = getWeekOfYear(nextWeekStart);
+            const nextLeader = getLeaderForWeek(nextWeekNum);
+            document.getElementById('nextLeader').textContent = nextLeader.name;
+
+            updateTeamMemberDuties();
+        }
+
+        function updateTeamMemberDuties() {
+            const today = new Date();
+            
+            TEAM_MEMBERS.forEach((member, index) => {
+                let nextDutyDate = null;
+                
+                for (let weeks = 0; weeks < 52; weeks++) {
+                    const checkDate = new Date(today);
+                    checkDate.setDate(today.getDate() + (weeks * 7));
+                    const weekNum = getWeekOfYear(checkDate);
+                    const weekLeader = getLeaderForWeek(weekNum);
+                    
+                    if (weekLeader.name === member.name && checkDate >= today) {
+                        const monday = new Date(checkDate);
+                        monday.setDate(checkDate.getDate() - checkDate.getDay() + 1);
+                        nextDutyDate = monday;
+                        break;
+                    }
+                }
+                
+                const elementId = member.name.toLowerCase().replace(' ', '').replace('pastor', 'pastor') + 'Next';
+                const element = document.getElementById(elementId);
+                if (element && nextDutyDate) {
+                    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+                    element.textContent = `Next duty: ${nextDutyDate.toLocaleDateString('en-US', options)}`;
+                }
+            });
+        }
+
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            updateCalendar();
+        }
+
+        function updateCalendar() {
+            const monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            
+            document.getElementById('currentMonth').textContent = 
+                `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        }
+
+        function updateVerseOfDay() {
+            const today = new Date();
+            const todayString = today.toISOString().split('T')[0];
+            
+            let todayVerse = versesData.find(verse => {
+                if (verse.date) {
+                    return verse.date === todayString;
+                }
+                return false;
+            });
+            
+            if (!todayVerse && versesData.length > 0) {
+                const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+                const verseIndex = dayOfYear % versesData.length;
+                todayVerse = versesData[verseIndex];
+            }
+            
+            if (todayVerse) {
+                document.getElementById('verseText').textContent = `"${todayVerse.text}"`;
+                document.getElementById('verseReference').textContent = `- ${todayVerse.reference}`;
+                
+                if (todayVerse.imageUrl) {
+                    const verseImage = document.getElementById('verseImage');
+                    verseImage.src = todayVerse.imageUrl;
+                    verseImage.style.display = 'block';
+                    verseImage.onerror = function() {
+                        this.style.display = 'none';
+                    };
+                }
+            }
+        }
+
+        // Initialize the calendar
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCalendar();
+            loadVersesFromSheet();
+        });
+    </script>
+</body>
+</html>
